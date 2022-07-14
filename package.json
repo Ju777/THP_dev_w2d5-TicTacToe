@@ -1,0 +1,22 @@
+{
+  "name": "thp_dev_w2d5-tictactoe",
+  "version": "1.0.0",
+  "description": "Ceci est une base de code pour le projet du Morpion, dans le cadre de la semaine sur l'algorithmie de la formation THP-Next.",
+  "main": "morpion.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ju777/THP_dev_w2d5-TicTacToe.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ju777/THP_dev_w2d5-TicTacToe/issues"
+  },
+  "homepage": "https://github.com/Ju777/THP_dev_w2d5-TicTacToe#readme",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}

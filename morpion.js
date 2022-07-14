@@ -128,9 +128,14 @@ class Morpion {
 		let hasPlayed = false;
 		this.gridMap.forEach((line, y) => {
 			line.forEach((cell, x) => {
+
+				// [CODE ORIGINAL] : l'IA joue sur la première case vide qu'elle trouve.
 				if (!cell && !hasPlayed) {
 					hasPlayed = this.drawHit(x, y, this.iaPlayer);
 				}
+
+				// 2.3.1 : faire jouer l'IA sur une case aléatoire
+				// Il faut récupérer 2 valeurs aléatoires, x et y, comprises entre 0 et 2 chacune.
 			});
 		});
 	}
