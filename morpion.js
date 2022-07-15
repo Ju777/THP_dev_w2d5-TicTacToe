@@ -125,18 +125,27 @@ class Morpion {
 			return;
 		}
 
-		let hasPlayed = false;
-		this.gridMap.forEach((line, y) => {
-			line.forEach((cell, x) => {
+		// [CODE ORIGINAL] : l'IA joue sur la première case vide qu'elle trouve.
+		// let hasPlayed = false;
+		// this.gridMap.forEach((line, y) => {
+		// 	line.forEach((cell, x) => {
+		// 		if (!cell && !hasPlayed) {
+		// 			hasPlayed = this.drawHit(x, y, this.iaPlayer);
+		// 		}				
+		// 	});
+		// });
 
-				// [CODE ORIGINAL] : l'IA joue sur la première case vide qu'elle trouve.
-				if (!cell && !hasPlayed) {
-					hasPlayed = this.drawHit(x, y, this.iaPlayer);
-				}
+		// 2.3.1 : faire jouer l'IA sur une case aléatoire
+		// Il faut récupérer 2 valeurs aléatoires, x et y, comprises entre 0 et 2 chacune.
+		let x = Math.floor(Math.random() * 3);
+		let y = Math.floor(Math.random() * 3);
+		console.log(x, y);
+		this.drawHit(x, y, this.iaPlayer);
 
-				// 2.3.1 : faire jouer l'IA sur une case aléatoire
-				// Il faut récupérer 2 valeurs aléatoires, x et y, comprises entre 0 et 2 chacune.
-			});
-		});
 	}
 }
+
+function enter() {
+    return prompt("[ENTER]");
+}
+
