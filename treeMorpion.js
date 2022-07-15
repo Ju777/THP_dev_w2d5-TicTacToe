@@ -1,5 +1,7 @@
 const fs = require('fs');
 const prompt = require("prompt-sync")({ sigint: true });
+
+// L'ordre des éléments du tableau suivant est à conserver tel quel. Il conditionne TOUTES les recherches de noeuds.
 const allCells = [[0,0], [1,0], [2,0], [0,1], [1,1], [2,1], [0,2], [1,2], [2,2]];
 
 function enter() {
@@ -116,17 +118,14 @@ function welcomeScreen() {
 }
 
 function choseCell() {
-    // Choix de la case de départ
-    console.log("\nA partie de quelle case de jeu [colonne, ligne] doit commencer cet arbre ?");
-
     let col;
     while(col !== "0" && col !== "1" && col !== "2") {
-        col = prompt("Colonne 0, 1 ou 2 > ");
+        col = prompt("Colonne : 0, 1 ou 2 > ");
     }
 
     let line;
     while(line !== "0" && line !== "1" && line !== "2") {
-        line = prompt("Ligne 0, 1 ou 2 > ");
+        line = prompt("Ligne : 0, 1 ou 2 > ");
     }
 
     return [parseInt(col), parseInt(line)];
@@ -135,7 +134,7 @@ function choseCell() {
 function treeCreation(startingCell) {
     let tree = new Tree();
 
-    console.log("\nAppuyer sur ENTER pour lancer la création d'un arbre de morpion qui démarre à la case " + startingCell);
+    console.log("\nAppuyer sur ENTER pour lancer la création d'un arbre de morpion qui démarre à la case " + startingCell + ".");
     enter();
     tree.rootNodeCreation(startingCell);
     console.log("Opération terminée => veuillez consulter les affichages qui vont suivre.");
@@ -144,7 +143,7 @@ function treeCreation(startingCell) {
 
     console.clear();
     console.log("\n" + "*".repeat(50));
-    console.log("AFFICHAGE DE LOBJET 'ARBRE'\n-> console.log(tree);");
+    console.log("\tAFFICHAGE DE LOBJET 'ARBRE'\n-> console.log(tree);");
     console.log("*".repeat(50));
     enter();
     console.log(tree);
@@ -152,7 +151,7 @@ function treeCreation(startingCell) {
 
     console.clear();
     console.log("\n" + "*".repeat(50));
-    console.log("AFFICHAGE DU NOEUD RACINE tree.root \n-> console.log(tree.root);");
+    console.log("\tAFFICHAGE DE L'OBJET 'NOEUD RACINE' \n-> console.log(tree.root);");
     console.log("*".repeat(50));
     enter();
     console.log(tree.root);
@@ -160,7 +159,7 @@ function treeCreation(startingCell) {
 
     console.clear();
     console.log("\n" + "*".repeat(50));
-    console.log("AFFICHAGE DES ENFANTS DU ROOT\n-> console.log(tree.root.children);");
+    console.log("\tAFFICHAGE DES ENFANTS DU ROOT\n-> console.log(tree.root.children);");
     console.log("*".repeat(50));
     enter();
     console.log(tree.root.children);
@@ -176,7 +175,7 @@ function treeCreation(startingCell) {
 
     console.clear();
     console.log("\n" + "*".repeat(50));
-    console.log(`AFFICHAGE DES ENFANTS DU PREMIER ENFANT DU ROOT : cellule ${tree.root.children[0].cell}, round ${tree.root.children[0].round}\n-> console.log(tree.root.children[0]);`);
+    console.log(`\tAFFICHAGE DES ENFANTS DU PREMIER ENFANT DU ROOT :\n-> console.log(tree.root.children[0]);`);
     console.log("*".repeat(50));
     enter();
     console.log(tree.root.children[0].children);
@@ -185,21 +184,201 @@ function treeCreation(startingCell) {
     return tree;
 }
 
-function findNode(tree) {
+function findNode() {
+    // Définir le root node.
+    console.log("\nQuel est le 1er coup joué dans cette partie ?");
+    let startingCell = choseCell();    
+    let tree = treeCreation(startingCell);   
+
+    // Ecran d'accueil de la fonction de recherche de coups à jouer
     console.clear();
     console.log("\n" + "*".repeat(50));
-    console.log(`RECHERCHE : on recherche les options de jeu pour le noeud [2,1] round 4`);
+    console.log(`\t ~ RECHERCHE DE COUPS A JOUER ~`);
     console.log("*".repeat(50));
     enter();
-    console.log(tree.root.children[4].children[2].children[3].children);
+    
+    console.log(`\n\tAprès [${tree.root.cell}] comme 1er coup, les cases disponibles sont :\n`);
     enter();
+    console.log(tree.root.children);
+    enter();
+
+    let round2Node = round2Options(tree);
+    let round3Node = round3Options(tree, round2Node);
+    let round4Node = round4Options(tree, round3Node);
+    let round5Node = round5Options(tree, round4Node);
+    let round6Node = round6Options(tree, round5Node);
+    let round7Node = round7Options(tree, round6Node);
+    let round8Node = round8Options(tree, round7Node);
+
+    // VIEUX CODE DE VERIF de la cohérence de l'arbre, via des recherches manuelles successives.
+    // console.clear();
+    // console.log("\n" + "*".repeat(50));
+    // console.log(`RECHERCHE : on recherche les options de jeu pour le noeud [0,0] round 9`);
+    // console.log("*".repeat(50));
+    // enter();
+    // console.log(tree.root.children[4].children[2].children[3].children[2].children[2].children[2].children[1].children[0]);
+    // enter();
 }
+
+function round2Options(tree) {
+    // Options de jeu après le 2e coup joué.
+    console.log(`\nQuel est le 2e coup joué (après [${tree.root.cell}])?\n`);
+    let second = choseCell();
+    // console.log("Vérif de saisie => " + second);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 2e coup.
+    let round2Options = [...tree.root.children];
+    let result;
+    for(let i = 0 ; i < round2Options.length ; i++) {
+        if(tree.arrayEquals(round2Options[i].cell, second)) {
+            console.clear();
+            console.log(`\n\tAprès [${second}] comme 2e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round2Options[i].children);
+            result = round2Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round3Options(tree, round2Node) {
+    // Options de jeu après le 3e coup joué.
+    console.log(`\nQuel est le 3e coup joué (après [${round2Node.cell}])?\n`);
+    let third = choseCell();
+    // console.log("Vérif de saisie => " + third);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 3e coup.
+    let round3Options = [...round2Node.children];
+    let result;
+    for(let i = 0 ; i < round3Options.length ; i++) {
+        if(tree.arrayEquals(round3Options[i].cell, third)) {
+            console.clear();
+            console.log(`\n\tAprès [${third}] comme 3e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round3Options[i].children);
+            result = round3Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round4Options(tree, round3Node) {
+    // Options de jeu après le 4e coup joué.
+    console.log(`\nQuel est le 4e coup joué (après [${round3Node.cell}])?\n`);
+    let fourth = choseCell();
+    // console.log("Vérif de saisie => " + fourth);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 4e coup.
+    let round4Options = [...round3Node.children];
+    let result;
+    for(let i = 0 ; i < round4Options.length ; i++) {
+        if(tree.arrayEquals(round4Options[i].cell, fourth)) {
+            console.clear();
+            console.log(`\n\tAprès [${fourth}] comme 4e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round4Options[i].children);
+            result = round4Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round5Options(tree, round4Node) {
+    // Options de jeu après le 5e coup joué.
+    console.log(`\nQuel est le 5e coup joué (après [${round4Node.cell}])?\n`);
+    let fifth = choseCell();
+    // console.log("Vérif de saisie => " + fifth);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 5e coup.
+    let round5Options = [...round4Node.children];
+    let result;
+    for(let i = 0 ; i < round5Options.length ; i++) {
+        if(tree.arrayEquals(round5Options[i].cell, fifth)) {
+            console.clear();
+            console.log(`\n\tAprès [${fifth}] comme 5e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round5Options[i].children);
+            result = round5Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round6Options(tree, round5Node) {
+    // Options de jeu après le 6e coup joué.
+    console.log(`\nQuel est le 6e coup joué (après [${round5Node.cell}])?\n`);
+    let sixth = choseCell();
+    // console.log("Vérif de saisie => " + sixth);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 6e coup.
+    let round6Options = [...round5Node.children];
+    let result;
+    for(let i = 0 ; i < round6Options.length ; i++) {
+        if(tree.arrayEquals(round6Options[i].cell, sixth)) {
+            console.clear();
+            console.log(`\n\tAprès [${sixth}] comme 6e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round6Options[i].children);
+            result = round6Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round7Options(tree, round6Node) {
+    // Options de jeu après le 7e coup joué.
+    console.log(`\nQuel est le 7e coup joué (après [${round6Node.cell}])?\n`);
+    let seventh = choseCell();
+    // console.log("Vérif de saisie => " + seventh);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 7e coup.
+    let round7Options = [...round6Node.children];
+    let result;
+    for(let i = 0 ; i < round7Options.length ; i++) {
+        if(tree.arrayEquals(round7Options[i].cell, seventh)) {
+            console.clear();
+            console.log(`\n\tAprès [${seventh}] comme 7e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round7Options[i].children);
+            result = round7Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
+function round8Options(tree, round7Node) {
+    // Options de jeu après le 8e coup joué.
+    console.log(`\nQuel est le 8e coup joué (après [${round7Node.cell}])?\n`);
+    let eighth = choseCell();
+    // console.log("Vérif de saisie => " + eighth);
+
+    // Arrivé à ce stade, nous devons récupérer le noeud de ce 8e coup.
+    let round8Options = [...round7Node.children];
+    let result;
+    for(let i = 0 ; i < round8Options.length ; i++) {
+        if(tree.arrayEquals(round8Options[i].cell, eighth)) {
+            console.clear();
+            console.log(`\n\tAprès [${eighth}] comme 8e coup, les cases disponibles sont :\n`);
+            enter();
+            console.log(round8Options[i].children);
+            console.log("\n\tEt coup terminera la partie <3 !")
+            result = round8Options[i];
+            enter(); 
+        }
+    }
+    return result;   
+}
+
 
 function perform() {
     welcomeScreen();
-    let startingCell = choseCell();    
-    let tree = treeCreation(startingCell);   
-    findNode(tree); 
+    findNode(); 
 }
 
 perform();
