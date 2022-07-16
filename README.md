@@ -4,5 +4,5 @@
 - The treeMorpions.js is functional, you can run it and check how it finds the game options round after round.
 
 ## Need to be done :
-- Because I am too short in time, the HTML tic-tac-toe project is not finalized. The treeMorpions.js file is the base for the IA.
-- IA needs to be finished.
+- Because I am too short in time, the HTML tic-tac-toe project is not finalized. The treeMorpions.js file is the base for the future IA.
+- IA needs to be finished (= 2.3.3 of the project). 
