@@ -12,9 +12,10 @@ function arrayEquals(a, b) {
         a.every((val, index) => val === b[index]);
 }
 
-let a = [1,2,3];
+let a = [1,2,3, [4,5,6]];
 let b = [1,2,3];
-let c = [4,5,6];
+let c = [[4,5,6]];
 
-console.log(arrayEquals(a,b));
-console.log(arrayEquals(a,c));
+// console.log(arrayEquals(a,b));
+// console.log(arrayEquals(a,c));
+console.log(a.includes([4,5,6]));
